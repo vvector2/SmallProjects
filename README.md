@@ -3,4 +3,4 @@ point. The map which is 10x10 array 2d is generated randomly multithreading , Ja
 
 Pentonimo - logical puzzle which the purpose is create reactangle using all bricks , c++
 
-RemoteBuggy - written in python small script that enable controlling a robot via websocket and stream video to hosted website
+RemoteBuggy - written in python small script that enable controlling a raspberry pi robot via websocket and stream video to hosted website
