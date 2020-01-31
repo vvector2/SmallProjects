@@ -1,0 +1,62 @@
+﻿<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <title>Buggy</title>
+    </head>
+    <body>
+        <div class="container jumbotron" style="position: absolute;top: 50%;left: 50%;-moz-transform: translateX(-50%) translateY(-50%);-webkit-transform: translateX(-50%) translateY(-50%);transform: translateX(-50%) translateY(-50%);">
+            <div class="jumbotron row justify-content-center">
+                <img src="stream.mjpg" width="640" height="480">
+            </div>
+            <div class="row justify-content-center" style="margin-top: 60px;" >
+                <div class="col text-center" >
+                    <button class="btn btn-primary" style="width: 24%; height: 70px;" ontouchstart="Send('w')" ontouchend="Send('q')"  onmouseup="Send('q')" onmousedown="Send('w')">w</button>
+                </div>
+            </div>
+            <div class="row justify-content-center" style="margin-top: 50px;" >
+                    <div class="col text-center" >
+                        <button class="btn btn-primary" style="width: 90%; height: 70px;" ontouchstart="Send('a')" ontouchend="Send('q')" onmouseup="Send('q')" onmousedown="Send('a')">a</button>
+                    </div>
+                    <div class="col text-center" >
+                        <button class="btn btn-primary" style="width: 90%; height: 70px;" ontouchstart="Send('s')" ontouchend="Send('q')"  onmouseup="Send('q')" onmousedown="Send('s')">s</button>
+                    </div>
+                    <div class="col text-center">
+                        <button class="btn btn-primary" style="width: 90%; height: 70px;" ontouchstart="Send('d')" ontouchend="Send('q')"  onmouseup="Send('q')" onmousedown="Send('d')">d</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            var websocketPort = 65432;
+            var websocket;
+            var host = location.hostname
+
+            function init() {
+                websocket = new WebSocket("ws://"+host+":"+websocketPort.toString()+"/");
+
+                websocket.onopen = function() {
+                    console.log("Connection established with server.");
+                };
+
+                websocket.onclose = function() {
+                    console.log("Connection closed with server.");
+                };
+
+                websocket.onerror = function(e) {
+                    console.log(e)
+                };
+
+                console.log("init function ended.")
+            }
+            window.onload = init
+
+            function Send(message){
+                websocket.send(message);
+            }
+            
+        </script>
+    </body>
+</html>
