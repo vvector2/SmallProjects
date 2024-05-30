@@ -1,0 +1,50 @@
+﻿@model WebApplicatationPollService.Models.Entities.PollEntity
+
+@{
+    ViewBag.Title = "PollVote";
+}
+
+<h2>Vote </h2>
+
+@using (Html.BeginForm("PollVote", "Home", FormMethod.Post)) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(false, "", new  {@class="text-danger" })
+        <p>@Model.Question</p>
+        <input name="IdPoll" type="hidden" value="@Model.Id" />
+        <input name="IdAnswer" id="idAnswer" type="hidden" />
+        <div id="AnswersCheckBoxes">
+            @foreach(var item in Model.Answers ) {
+               <label class="label-control">@item.Answers</label>
+               <input onclick="SetIdAnswerValue(@item.Id)" class="form-control" type="checkbox" id="@item.Id" />
+            }
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Vote" class="btn btn-default" id="button-vote" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Check result", "PollResult", new {id= Model.Id })
+</div>
+
+@section scripts {
+<script>
+    function SetIdAnswerValue(id) { 
+        document.getElementById("idAnswer").value = id;
+        console.log("hi");
+        var inputs = document.getElementsByTagName('input');
+        for (var i = 0; i < inputs.length; i++) {//set rest of checkboxes on unchecked
+            console.log(inputs[i].id);
+            if (inputs[i].type === 'checkbox' && inputs[i].id != id ) inputs[i].checked = false;
+        }
+    }
+        
+</script>   
+}

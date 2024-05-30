@@ -1,0 +1,33 @@
+﻿@model WebApplicatationPollService.Models.ViewModels.TableModelView<WebApplicatationPollService.Models.Entities.PollEntity>
+@{
+    ViewBag.Title = "Explore";
+    Layout = "~/Views/shared/_TableLayout.cshtml";
+}
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                Question<span onclick="Sort('Question','DESC')" class="fas fa-sort-down"></span>
+                <span onclick="Sort('Question','ASC')" class="fas fa-sort-up"></span>
+            </th>
+            <th>
+                Views<span onclick="Sort('View','DESC')" class="fas fa-sort-down"></span>
+                <span onclick="Sort('View','ASC')" class="fas fa-sort-up"></span>
+            </th>
+            <th>
+                Creation Time<span onclick="Sort('DateTime','DESC')" class="fas fa-sort-down"></span>
+                <span onclick="Sort('DateTime','ASC')" class="fas fa-sort-up"></span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Elements) {
+            <tr>
+                <td>@Html.ActionLink(item.Question, "PollVote", new { id = item.Id })</td>
+                <td>@item.View</td>
+                <td>@item.DateTime</td>
+            </tr>
+        }
+    </tbody>
+</table>

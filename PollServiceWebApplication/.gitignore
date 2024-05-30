@@ -1,0 +1,8 @@
+packages/*
+WebApplicatationPollService/bin/*
+WebApplicatationPollService/obj/*
+WebApplicatationPollService/App_Data/*
+WebApplicatationPollService/Migrations/*
+.vs/*
+WebApplicationPollServiceTest/bin/*
+WebApplicationPollServiceTest/obj/*

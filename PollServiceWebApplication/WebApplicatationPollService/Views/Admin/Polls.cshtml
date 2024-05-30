@@ -1,0 +1,60 @@
+﻿
+@model WebApplicatationPollService.Models.ViewModels.TableModelView<WebApplicatationPollService.Models.Entities.PollEntity>
+@{
+    ViewBag.Title = "Explore";
+    Layout = "~/Views/shared/_TableLayout.cshtml";
+}
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                Id <span onclick="Sort('Id','DESC')" class="fas fa-sort-down"></span>
+                <span onclick="Sort('Id','ASC')" class="fas fa-sort-up"></span>
+            </th>
+            <th>
+                Question <span onclick="Sort('Question','DESC')" class="fas fa-sort-down"></span>
+                <span onclick="Sort('Question','ASC')" class="fas fa-sort-up"></span>
+            </th>
+            <th>
+                Views <span onclick="Sort('View','DESC')" class="fas fa-sort-down"></span>
+                <span onclick="Sort('View','ASC')" class="fas fa-sort-up"></span>
+            </th>
+            <th>
+                Creation Time <span onclick="Sort('DateTime','DESC')" class="fas fa-sort-down"></span>
+                <span onclick="Sort('DateTime','ASC')" class="fas fa-sort-up"></span>
+            </th>
+            <th>
+                User Checking <span onclick="Sort('UserChecking','DESC')" class="fas fa-sort-down"></span>
+                <span onclick="Sort('UserChecking','ASC')" class="fas fa-sort-up"></span>
+            </th>
+            <th>
+                UserName <span onclick="Sort('UserName','DESC')" class="fas fa-sort-down"></span>
+                <span onclick="Sort('UserName','ASC')" class="fas fa-sort-up"></span>
+            </th>
+            <th>Delete Poll</th>
+        </tr>
+    </thead>
+    <tbody id="tableContent">
+        @foreach (var item in Model.Elements) {
+            <tr>
+                <td>@Html.ActionLink(item.Id.ToString(),"PollVote" , "Home", new { id= item.Id},null )</td>
+                <td>@item.Question</td>
+                <td>@item.View</td>
+                <td>@item.DateTime</td>
+                <td>@item.UserChecking</td>
+                <td>@Html.ActionLink(item.UserCreator.UserName, "UserProfile", "User",new { name= item.UserCreator.UserName },null) </td>
+                <td>
+                    @using (Html.BeginForm("DeletePoll", "Admin", FormMethod.Post)) {
+                    @Html.AntiForgeryToken();
+                    <input type="hidden" name="id" value="@item.Id" />
+                    <input type="submit" value="Delete" class=" btn btn-danger" />
+                    }
+                </td>
+            </tr>
+                    }
+    </tbody>
+</table>
+
+
+

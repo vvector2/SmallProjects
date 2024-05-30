@@ -1,0 +1,40 @@
+﻿@model WebApplicatationPollService.Models.ViewModels.UserProfileModelView
+@{
+    ViewBag.Title = "UserProfile";
+    Layout = "~/Views/shared/_Layout.cshtml";
+}
+
+<h2>UserProfile</h2>
+
+<div class="jumbotron">
+    <p>Username: @Model.User.UserName</p>
+    <h3>List of polls</h3>
+    @if (User.Identity.IsAuthenticated && (User.Identity.Name == Model.User.UserName || Model.IsAdmin)) {
+        foreach (var item in Model.User.CreatedPoll) {
+            <div>
+            <a class="d-inline" href=@Url.Action("PollVote","Home", new {id=item.Id} )>@item.Question</a>
+            @if (Model.IsAdmin) {
+                using (Html.BeginForm("DeletePoll", "Admin", FormMethod.Post, new { @class = "d-inline" })) {
+                    @Html.AntiForgeryToken();
+                    <input type="hidden" name="id" value="@item.Id" />
+                    <input type="submit" class="btn-danger" value="delete" />
+                }
+            } else {
+                using (Html.BeginForm("DeletePoll", "User", FormMethod.Post, new { @class = "d-inline" })) {
+                    @Html.AntiForgeryToken();
+                    <input type="hidden" name="id" value="@item.Id" />
+                    <input type="submit" class="btn btn-danger" value="delete" />
+                }
+            }
+             </div>
+        }
+    } else {
+        foreach (var item in Model.User.CreatedPoll) {
+            if (!string.IsNullOrEmpty(item.Password)) {
+                <a href=@Url.Action("PollVote","Home", new {id=item.Id} )>@item.Question</a>
+            }
+        }
+    }
+
+
+</div>

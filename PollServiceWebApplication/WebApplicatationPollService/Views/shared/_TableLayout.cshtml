@@ -1,0 +1,111 @@
+﻿
+@{
+    ViewBag.Title = "_TableLayout";
+    Layout = "~/Views/shared/_Layout.cshtml";
+}
+
+
+<h2>Explore</h2>
+<div class="row">
+    <div class="col-4 ">
+        <div class="input-group">
+            <input id="inputSearch" type="text" name="phrase" class="form-control" placeholder="search" />
+            <div class="input-group-btn">
+                <button onclick="Search()" id="btnSearch" type="button" class="btn btn-default" >search</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-2 offset-4 ">
+        <p class="d-inline">Show on page: </p>
+        <a class="d-inline" href="#" onclick="ChangeNumberOfElements(10)">10</a>
+        <a class="d-inline" href="#" onclick="ChangeNumberOfElements(20)">20</a>
+        <a class="d-inline" href="#" onclick="ChangeNumberOfElements(50)">50</a>
+    </div>
+</div>
+@RenderBody()
+
+<h3>Pages:</h3>
+<div class="col-4 offset-4" id="pageNav">
+
+</div>
+@section scripts {
+    <script>
+        var numberAllElements = @ViewBag.Elements;//Number of filtered elements. It is used to calculate last page.
+        window.addEventListener("DOMContentLoaded", CreateContentInPageNav);
+
+        function CreateContentInPageNav() {
+            //nPages is the last page , param.page is current page
+            var params = GetParamFromCurrentLink();
+            var nPages = numberAllElements / params.elements;
+            if (nPages %1 !==0)
+                nPages = parseInt(nPages) +1;
+            var div = document.getElementById("pageNav");
+            var startEnumeratingPage;
+            if (params.page > 10) {
+                div.innerHTML += CreateLinkToPage(0, params);
+                div.innerHTML += "<p>...</p>"
+                startEnumeratingPage = params.page;
+            } else startEnumeratingPage = 1;
+
+            for (var i = 0; i < 10 && i + startEnumeratingPage <= nPages; i++)//creating next 10 pages
+                div.innerHTML += CreateLinkToPage(i + startEnumeratingPage, params);
+
+            if (params.page + 10 < nPages) {//creating link to last page 
+                div.innerHTML += "<p>...</p>";
+                div.innerHTML += CreateLinkToPage(nPages, params);
+            }
+        }
+        function CreateLinkToPage(page, params) {
+            var currentPage = params.page;
+            params.page = page;
+            var link = CreateUrl(params);
+            params.page = currentPage;
+            if (page == currentPage) return "<a style='text-decoration: underline;' href='" + link + "'>" + page + "</a>";
+            else return "<a href='" + link + "'>" + page + "</a>";
+        }
+        function ChangeNumberOfElements(elements) {
+            var params = GetParamFromCurrentLink();
+            params.elements = elements;
+            params.page = '1';
+            console.log(CreateUrl(params));
+            window.location.href = CreateUrl(params);
+        }
+        function Sort(nameSort, orderMode) {
+            var params = GetParamFromCurrentLink();
+            params.page = '1';
+            params.elements = '10';
+            if (orderMode === "DESC") params.orderMode = 'true';
+            else params.orderMode = 'false';
+            params.nameSort = nameSort;
+            console.log(CreateUrl(params));
+            window.location.replace(CreateUrl(params));
+        }
+        function Search() {
+            var phrase = document.getElementById("inputSearch").value;
+            var url = CreateUrl({ phrase: phrase, orderMode: '', nameSort: '', elements: '10', page: '1', });
+            console.log(url);
+            window.location.replace(url);
+        }
+        function GetParamFromCurrentLink() {
+            var url = new URL(window.location.href);
+            var params = new Object();
+            params.phrase = url.searchParams.get("phrase");
+            params.orderMode = url.searchParams.get("orderMode");
+            params.nameSort = url.searchParams.get("nameSort");
+            params.elements = url.searchParams.get("elements");
+            params.page = url.searchParams.get("page");
+            if (params.elements === null) params.elements = 10;
+            if (params.page === null) params.page = 1;
+            return params;
+        }
+        function CreateUrl(params) {
+            var link = window.location.pathname+"?";
+            if (params.phrase != null && params.phrase != '') link += "phrase=" + params.phrase + "&";
+            if (params.nameSort != null && params.nameSort != '') link += "nameSort=" + params.nameSort + "&";
+            if (params.orderMode != null && params.orderMode != '') link += "orderMode=" + params.orderMode + "&";
+            link += "elements=" + params.elements + "&";
+            link += "page=" + params.page;
+            return link;
+        }
+    </script>
+}

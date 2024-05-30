@@ -1,0 +1,34 @@
+﻿@model WebApplicatationPollService.Models.Entities.PollEntity
+
+@{
+    ViewBag.Title = "PollResult";
+    float counter = 0;
+    foreach (var item in Model.Answers) {
+        counter += item.Votes;
+    }
+    int intPercent;
+    float percent;
+}
+
+<h2>Result</h2>
+
+<div class="jumbotron">
+    <h2>@Model.Question</h2>
+
+    @foreach (var item in Model.Answers) {
+        <p>@item.Answers [@item.Votes]</p>
+        <div class="progress">
+            @if (item.Votes > 0) { percent =item.Votes / counter *100;
+                intPercent = (int)percent;
+            }else { intPercent = 0; }
+            <div class="progress-bar" role="progressbar" aria-valuenow="@intPercent.ToString()" aria-valuemax="100"
+                 aria-valuemin="0" style="@String.Format( "width:{0}%", intPercent.ToString() )">
+                @String.Format("{0}%", intPercent.ToString())
+            </div>
+        </div>
+    }
+    <p>@string.Format("Votes: {0}", counter)</p>
+    <a href="@Url.Action("PollVote", new {id=Model.Id })">Vote</a>
+</div>
+
+<p>The poll was created at @Model.DateTime</p>

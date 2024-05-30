@@ -1,0 +1,47 @@
+﻿@model WebApplicatationPollService.Models.ViewModels.TableModelView<WebApplicatationPollService.Models.ApplicationUser>
+
+@{
+    ViewBag.Title = "Users";
+    Layout = "~/Views/shared/_TableLayout.cshtml";
+}
+
+<h2>Users</h2>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                Id <span onclick="Sort('Id','DESC')" class="fas fa-sort-down"></span>
+                <span onclick="Sort('Id','ASC')" class="fas fa-sort-up"></span>
+            </th>
+            <th>
+                UserName <span onclick="Sort('UserName','DESC')" class="fas fa-sort-down"></span>
+                <span onclick="Sort('UserName','ASC')" class="fas fa-sort-up"></span>
+            </th>
+            <th>
+                Email <span onclick="Sort('Email','DESC')" class="fas fa-sort-down"></span>
+                <span onclick="Sort('Email','ASC')" class="fas fa-sort-up"></span>
+            </th>
+            <th>
+                Delete
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Elements) {
+            <tr>
+                <td>@Html.ActionLink(item.UserName, "UserProfile","User",new { id = item.Id }, null)</td>
+                <td>@item.UserName</td>
+                <td>@item.Email</td>
+                <td>
+                    @using (Html.BeginForm("DeleteUser", "Admin", FormMethod.Post)) {
+                    @Html.AntiForgeryToken();
+                    <input type="hidden" name="id" value="@item.Id" />
+                    <input type="submit" class="btn btn-danger" value="delete" />
+                    }
+                </td>
+                
+            </tr>
+                    }
+    </tbody>
+</table>

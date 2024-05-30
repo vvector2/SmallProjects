@@ -1,0 +1,94 @@
+﻿@model WebApplicatationPollService.Models.ViewModels.PollModelView
+
+@{
+    ViewBag.Title = "Create Poll";
+}
+
+<h2>CreatePoll</h2>
+
+@using (Html.BeginForm("CreatePoll", "Home", FormMethod.Post)) {
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(false,"", new {@class="text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Question, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="text" name="PollModelView.Question" class="form-control" />
+                @Html.ValidationMessageFor(model => model.Question, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-2">Private Poll</label>
+            <div class="col-2">
+                <input type="checkbox" class="form-control" onclick="ToggleVisibility();" />
+            </div>
+        </div>
+        <div style="display:none" id="FormPassword" class="form-group">
+            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="text" class = "form-control", name="PollModelView.Password" /> 
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.UserChecking, htmlAttributes: new { @class = "control-label col-2" })
+            <div class="col-2">
+                <div class="checkbox">
+                    <input  type="checkbox" class = "form-control" value="true" name="PollModelView.UserChecking" />
+                    @Html.ValidationMessageFor(model => model.UserChecking, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    <div class="form-group" id="listAnswers">
+      <label>Answers</label>
+      <div class="col-md-10">
+        <input id="AnswerInput1" class="form-control" type="text" name="PollModelView.Answers[0]" />
+      </div>
+      <div class="col-md-10">
+        <input id="AnswerInput2" class="form-control" type="text" name="PollModelView.Answers[1]" />
+      </div>       
+    </div>
+    <p class="text-danger" id="ValidationMessageForList" ></p>
+    <button type="button" class="btn btn-default" onclick="AddNewAnswerInput();">Add new answer</button>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts {
+<script>
+    var counter = 2;
+    function ToggleVisibility() {
+        var form = document.getElementById("FormPassword");
+        if (form.style.display == "none") form.style.display = "block";
+        else form.style.display = "none";
+    }
+    document.addEventListener('keydown', OnKeyDown)
+    function OnKeyDown(e) {
+        //when the lowest input has focus and user pressed arrow down then another input will be added below
+        if (e.keyCode === 40 && e.target === document.activeElement &&
+            e.target.id == "AnswerInput" + counter.toString())
+            AddNewAnswerInput();
+    }
+    function AddNewAnswerInput() {
+        if (counter < 7) {//maximum number of number input is 7
+            counter++;
+            var div = document.createElement("div");
+            div.className = "col-md-10";
+            var idString = "AnswerInput" + counter.toString();
+            var nameStr = "PollModelView.Answers[" + (counter - 1).toString() + "]"
+            div.innerHTML = "<input type='text' class='form-control' id='" + idString + "' " +
+                "  name='" + nameStr + "' />";
+            document.getElementById("listAnswers").appendChild(div);
+            document.getElementById(idString).focus();
+        }
+    }
+</script>
+
+}

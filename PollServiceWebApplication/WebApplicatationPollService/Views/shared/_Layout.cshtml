@@ -1,0 +1,38 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <title>@ViewBag.title</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="@Url.Action("Index", "Home")">Poll service </a>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" href=@Url.Action( "Explore", "Home" ) id="ExploreLink">Explore</a>
+                <a class="nav-item nav-link" href=@Url.Action( "CreatePoll", "Home" ) id="RegisterLink">CreatePoll</a>
+            </div>
+        </div>
+
+        @if(User.Identity.IsAuthenticated) {
+            <a href=@Url.Action("UserProfile", "User", new { name=User.Identity.Name })>Hello @User.Identity.Name</a>
+            using(Html.BeginForm("LogOff", "Account", FormMethod.Post, new { @class = "form-inline" })) { 
+                @Html.AntiForgeryToken()
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Logoff</button>
+            }
+        }else {
+            <a class="nav-item nav-link" href=@Url.Action( "Login", "Account" ) id="LoginLink">Login</a>
+        }
+    </nav>
+    <div id="body-layout" class="container jumbotron">
+        @RenderBody()
+        @RenderSection("scripts", false)
+    </div>
+</body>
+</html>
